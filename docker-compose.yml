@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  strapi_b_web:
+    image: next_base
+    # image: registry-vpc.cn-zhangjiakou.aliyuncs.com/rv/strapi_matrix:blog-web
+    volumes:
+      - .:/opt/app
+      - /opt/app/node_modules
+    labels:
+      - "traefik.http.routers.strapi_b_web.rule=Host(`strapi.songlairui.cn`) && ( Path(`/`) || PathPrefix(`/auth/login`) || (Path(`/connect/{provider:[a-z]+}`) && Query(`code=`)))"
+      - "traefik.http.routers.strapi_b_web.tls.certResolver=sample"
+networks:
+  default:
+    external:
+      name: lary

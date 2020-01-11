@@ -1,51 +1,55 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { sampleFetchWrapper } from "../../utils/sample-api";
 import { HOST_URL } from "../../utils/constants";
 
-export default function AccountProvider() {
+const loginViaProvider = async (provider: string, code: string) => {
   const {
-    query: { provider, code }
-  } = useRouter();
+    jwt,
+    user
+  } = await sampleFetchWrapper(
+    `${HOST_URL}/auth/${provider}/callback?code=${code}`,
+    { method: "GET" }
+  );
+  console.info("jwt ", jwt, user);
+  if (jwt) {
+    // Set the user's credentials
+    localStorage.setItem("_TOKEN_", jwt);
+    localStorage.setItem("_user_", user);
+    // forward
+  }
+  return { jwt, user };
+};
+
+export default function AccountProvider() {
+  const { provider, code } = useRouter() as any;
   const [authing, setAuthing] = useState(false);
 
-  const authFn = useCallback(async () => {
-    const {
-      jwt,
-      user
-    } = await sampleFetchWrapper(
-      `${HOST_URL}/auth/${provider}/callback?code=${code}`,
-      { method: "GET" }
-    );
-    console.info("jwt ", jwt, user);
-    if (jwt) {
-      // Set the user's credentials
-      localStorage.setItem("_TOKEN_", jwt);
-      localStorage.setItem("_user_", user);
-      // forward
-    }
-  }, []);
-
   useEffect(() => {
+    console.info("effecting", code, provider);
     if (!code) {
       return;
     }
     (async function() {
       setAuthing(true);
       try {
-        await authFn();
+        await loginViaProvider(provider, code);
       } catch (error) {
         //
       }
       setAuthing(false);
     })();
-  }, []);
+  }, [code]);
+
   return (
     <div>
       <h1>Provider: {provider}</h1>
       <p>{code}</p>
       <p>{authing ? "Authing ..." : "..."}</p>
-      <button disabled={authing} onClick={() => authFn()}>
+      <button
+        disabled={authing || !code}
+        onClick={() => loginViaProvider(provider, code)}
+      >
         auth
       </button>
     </div>
