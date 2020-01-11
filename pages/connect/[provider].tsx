@@ -22,7 +22,7 @@ const loginViaProvider = async (provider: string, code: string) => {
 };
 
 export default function AccountProvider() {
-  const { provider, code } = useRouter() as any;
+  const { provider, code } = useRouter().query as any;
   const [authing, setAuthing] = useState(false);
 
   useEffect(() => {
