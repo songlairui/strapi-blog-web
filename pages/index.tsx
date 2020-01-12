@@ -16,6 +16,8 @@ export default function Index() {
           Play Strapi 👋
         </Typography>
 
+        <Link href="/auth/login">Login</Link>
+        <br />
         <Link href="/about">About</Link>
         <br />
         <Link href="/connect/github">github Login</Link>

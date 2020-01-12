@@ -1,35 +1,98 @@
-import React from "react";
-import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+
+import {
+  Container,
+  CssBaseline,
+  Avatar,
+  Typography,
+  Box,
+  makeStyles,
+  Divider,
+  Button
+} from "@material-ui/core";
+import GitHubIcon from "@material-ui/icons/GitHub";
+import { NextPage } from "next";
+
+import Copyright from "../../../src/Copyright";
 import { HOST_URL } from "../../../utils/constants";
+import { getUser } from "../../../lib/user_page";
+import { logout } from "../../../lib/user";
 
-const providers = [
-  //   "discord",
-  //   "facebook",
-  "github"
-  //   "google",
-  //   "microsoft",
-  //   "twitch",
-  //   "twitter",
-  //   "instagram",
-  //   "vk"
-]; // To remove a provider from the list just delete it from this array...
+const useStyles = makeStyles(theme => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1)
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2)
+  }
+}));
 
-export default function AuthLogin() {
-  const {
-    query: { id }
-  } = useRouter();
+const SignIn: NextPage<any> = function({ user }) {
+  const [meta, setMeta] = useState(user);
+  const classes = useStyles();
 
+  useEffect(() => {
+    if (user) {
+      window.__user = user;
+    }
+  }, []);
   return (
-    <div>
-      <h1>Login</h1>
-      <h3>{id}</h3>
-      <div className="social-auth">
-        {providers.map(item => (
-          <a key={item} href={`${HOST_URL}/connect/${item}`} className="link">
-            {item}
-          </a>
-        ))}
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+
+      <div className={classes.paper}>
+        {meta ? (
+          <div>
+            login as: {meta.username} @ {meta.provider}
+            <br />
+            <Button
+              onClick={() => {
+                logout();
+                setMeta(undefined);
+              }}
+            >
+              Logout
+            </Button>
+          </div>
+        ) : (
+          <div>
+            <div>
+              <a href={`${HOST_URL}/connect/github`} className="link">
+                <Avatar className={classes.avatar}>
+                  <GitHubIcon />
+                </Avatar>
+              </a>
+            </div>
+            <Divider />
+
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+          </div>
+        )}
       </div>
-    </div>
+      <Box mt={8}>
+        <Copyright />
+      </Box>
+    </Container>
   );
-}
+};
+
+SignIn.getInitialProps = async ctx => {
+  const user = await getUser(ctx);
+
+  return { user };
+};
+
+export default SignIn;
