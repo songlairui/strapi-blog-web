@@ -15,3 +15,13 @@
 2. clone pure repo
 3. use docker-compose config mount point
    3.1 pre-build `docker-compose run strapi_b_web yarn build`
+
+## More
+
+### add material-ui
+
+> https://github.com/mui-org/material-ui/blob/master/examples/nextjs-with-typescript/package.json
+
+```bash
+yarn add @material-ui/core clsx
+```
