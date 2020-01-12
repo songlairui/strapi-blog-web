@@ -1,0 +1,31 @@
+name: Blog Docker Image
+
+on:
+  push:
+    paths:
+      - "package.json"
+      - "Dockerfile"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build the Docker image # 步骤名字
+        run: |
+          docker build . -t registry.cn-zhangjiakou.aliyuncs.com/rv/strapi_matrix:blog-web #执行构建
+          echo "${{ secrets.ALI_DOCKER_PWD }}" | docker login registry.cn-zhangjiakou.aliyuncs.com --username=${{ secrets.ALI_DOCKER_USER }} --password-stdin
+          docker push registry.cn-zhangjiakou.aliyuncs.com/rv/strapi_matrix:blog-web # 推送
+      # - name: Run SSH command
+      #   uses: garygrossgarten/github-action-ssh@v0.3.0
+      #   with:
+      #     host: ${{ secrets.ECS_HOST }}
+      #     username: ${{ secrets.ECS_USER }}
+      #     port: ${{ secrets.ECS_PORT }}
+      #     privateKey: ${{ secrets.MBP_KEY }}
+      #     # password: ${{ secrets.ECS_PWD }}
+      #     command: |
+      #       docker pull registry-vpc.cn-zhangjiakou.aliyuncs.com/rv/strapi_matrix:blog-web
+      #       # cd /home/larry/docker-composers/matrix-strapi
+      #       # docker-compose -f blog.yml up -d
