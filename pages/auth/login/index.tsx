@@ -68,7 +68,7 @@ const SignIn: NextPage<any> = function({ user }) {
         ) : (
           <div>
             <div>
-              <a href={`${HOST_URL}/connect/github`} className="link">
+              <a href={`${HOST_URL}/api_blog/connect/github`} className="link">
                 <Avatar className={classes.avatar}>
                   <GitHubIcon />
                 </Avatar>

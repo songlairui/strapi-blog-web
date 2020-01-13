@@ -14,5 +14,5 @@ export async function sampleFetchWrapper(
 }
 
 export const fetcher = (url: string) => {
-  return fetch(`${HOST_URL}${url}`).then(r => r.json());
+  return fetch(`${HOST_URL}/api_blog${url}`).then(r => r.json());
 };
