@@ -16,3 +16,6 @@ export async function sampleFetchWrapper(
 export const fetcher = (key: string, init?: RequestInit) => {
   return fetch(`${HOST_URL}/api_blog${key}`, init).then(r => r.json());
 };
+fetcher.raw = (key: string, init?: RequestInit) => {
+  return fetch(`${HOST_URL}/api_blog${key}`, init);
+};

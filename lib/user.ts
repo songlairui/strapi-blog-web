@@ -4,7 +4,7 @@ import jsCookie from "js-cookie";
 import { fetcher } from "../utils/sample-api";
 
 function requestMe(token: string, cookie: string) {
-  return fetcher(`/users/me`, {
+  return fetcher.raw(`/users/me`, {
     headers: {
       ...(token ? { authorization: `Bearer ${token}` } : null),
       ...(cookie ? { cookie } : null)
