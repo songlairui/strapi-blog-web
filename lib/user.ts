@@ -118,8 +118,9 @@ export function useFetchUser({ required } = {} as any) {
 }
 
 export const logout = () => {
-  jsCookie.remove("_token_");
   if (typeof window !== "undefined") {
+    jsCookie.remove("_token_");
+    localStorage.removeItem("_user_");
     delete window.__user;
   }
 };

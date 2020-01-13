@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
+import jsCookie from "js-cookie";
 
 import {
-  Container,
   CssBaseline,
   Avatar,
   Typography,
-  Box,
   makeStyles,
   Divider,
   Button
@@ -13,10 +12,11 @@ import {
 import GitHubIcon from "@material-ui/icons/GitHub";
 import { NextPage } from "next";
 
-import Copyright from "../../../src/Copyright";
 import { HOST_URL } from "../../../utils/constants";
-import { getUser } from "../../../lib/user_page";
 import { logout } from "../../../lib/user";
+import { UserContext } from "../../../lib/user.context";
+import { withAuth } from "../../../lib/withAuth";
+import Layout from "../../../components/Layout";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -38,19 +38,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const presistSessionCookie = () => {
+  const _token_ = jsCookie.get("_token_");
+  _token_ && jsCookie.set("_token_", _token_, { expires: 1 });
+};
+
 const SignIn: NextPage<any> = function({ user }) {
   const [meta, setMeta] = useState(user);
   const classes = useStyles();
 
-  useEffect(() => {
-    if (user) {
-      window.__user = user;
-    }
-  }, []);
+  const userCtx = useContext(UserContext);
   return (
-    <Container component="main" maxWidth="xs">
+    <Layout title="Login  👋">
       <CssBaseline />
-
       <div className={classes.paper}>
         {meta ? (
           <div>
@@ -59,10 +59,18 @@ const SignIn: NextPage<any> = function({ user }) {
             <Button
               onClick={() => {
                 logout();
+                userCtx.logout();
                 setMeta(undefined);
               }}
             >
               Logout
+            </Button>
+            <Button
+              onClick={() => {
+                presistSessionCookie();
+              }}
+            >
+              .
             </Button>
           </div>
         ) : (
@@ -82,17 +90,8 @@ const SignIn: NextPage<any> = function({ user }) {
           </div>
         )}
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </Container>
+    </Layout>
   );
 };
 
-SignIn.getInitialProps = async ctx => {
-  const user = await getUser(ctx);
-
-  return { user };
-};
-
-export default SignIn;
+export default withAuth(SignIn);

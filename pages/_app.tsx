@@ -1,9 +1,51 @@
 import React from "react";
 import App from "next/app";
 import Head from "next/head";
-import { ThemeProvider } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import {
+  Fab,
+  CssBaseline,
+  ThemeProvider,
+  createStyles,
+  makeStyles,
+  Theme
+} from "@material-ui/core";
 import theme from "../src/theme";
+import { UserContext } from "../lib/user.context";
+import { logout } from "../lib/user";
+import HomeIcon from "@material-ui/icons/Home";
+
+import Router from "next/router";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      "& > *": {
+        margin: theme.spacing(1)
+      }
+    },
+    extendedIcon: {
+      marginRight: theme.spacing(1)
+    }
+  })
+);
+
+function FloatingActionButtons({ title = "-" }) {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <Fab
+        variant="extended"
+        onClick={() => {
+          Router.push("/");
+        }}
+      >
+        <HomeIcon className={classes.extendedIcon} />
+        {title}
+      </Fab>
+    </div>
+  );
+}
 
 export default class MyApp extends App {
   componentDidMount() {
@@ -12,7 +54,30 @@ export default class MyApp extends App {
     if (jssStyles) {
       jssStyles.parentElement!.removeChild(jssStyles);
     }
+    try {
+      this.setUser(JSON.parse(localStorage.getItem("_user_") || "{}"));
+    } catch (error) {
+      //
+    }
   }
+
+  setUser = (payload: any) => {
+    this.setState({
+      user: payload
+    });
+  };
+  logout = () => {
+    logout();
+    this.setUser({});
+  };
+
+  state = {
+    user: {
+      username: ""
+    },
+    setUser: this.setUser,
+    logout: this.logout
+  };
 
   render() {
     const { Component, pageProps } = this.props;
@@ -29,7 +94,10 @@ export default class MyApp extends App {
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
-          <Component {...pageProps} />
+          <UserContext.Provider value={this.state}>
+            <Component {...pageProps} />
+            <FloatingActionButtons title={this.state.user.username} />
+          </UserContext.Provider>
         </ThemeProvider>
       </React.Fragment>
     );

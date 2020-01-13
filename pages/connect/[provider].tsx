@@ -20,7 +20,7 @@ const loginViaProvider = async (provider: string, code: string) => {
 };
 
 export default function AccountProvider() {
-  const { provider, code } = useRouter().query as any;
+  const { provider, code, push } = useRouter().query as any;
   const [authing, setAuthing] = useState(false);
 
   useEffect(() => {
@@ -32,6 +32,7 @@ export default function AccountProvider() {
       setAuthing(true);
       try {
         await loginViaProvider(provider, code);
+        push("/auth/profile");
       } catch (error) {
         //
       }
