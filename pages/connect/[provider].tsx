@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { sampleFetchWrapper } from "../../utils/sample-api";
 import { HOST_URL } from "../../utils/constants";
+import jscookies from "js-cookie";
 
 const loginViaProvider = async (provider: string, code: string) => {
   const {
@@ -14,8 +15,9 @@ const loginViaProvider = async (provider: string, code: string) => {
   console.info("jwt ", jwt, user);
   if (jwt) {
     // Set the user's credentials
-    localStorage.setItem("_TOKEN_", jwt);
-    localStorage.setItem("_user_", user);
+    jscookies.set("_token_", jwt, { expires: 7 });
+    localStorage.setItem("_user_", JSON.stringify(user || {}));
+    window.__user = user;
     // forward
   }
   return { jwt, user };
