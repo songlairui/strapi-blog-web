@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { sampleFetchWrapper } from "../../utils/sample-api";
-import { HOST_URL } from "../../utils/constants";
+import { fetcher } from "../../utils/sample-api";
 import jscookies from "js-cookie";
 
 const loginViaProvider = async (provider: string, code: string) => {
-  const {
-    jwt,
-    user
-  } = await sampleFetchWrapper(
-    `${HOST_URL}/auth/${provider}/callback?code=${code}`,
+  const { jwt, user } = await fetcher(
+    `/auth/${provider}/callback?code=${code}`,
     { method: "GET" }
   );
   console.info("jwt ", jwt, user);

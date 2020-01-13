@@ -13,6 +13,6 @@ export async function sampleFetchWrapper(
   }
 }
 
-export const fetcher = (url: string) => {
-  return fetch(`${HOST_URL}/api_blog${url}`).then(r => r.json());
+export const fetcher = (key: string, init?: RequestInit) => {
+  return fetch(`${HOST_URL}/api_blog${key}`, init).then(r => r.json());
 };
