@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import fetch from "isomorphic-unfetch";
 import jsCookie from "js-cookie";
 
-import { HOST_URL } from "../utils/constants";
+import { fetcher } from "../utils/sample-api";
 
-function getUserData(token: string, cookie: string) {
-  return fetch(`${HOST_URL}/users/me`, {
+function requestMe(token: string, cookie: string) {
+  return fetcher(`/users/me`, {
     headers: {
       ...(token ? { authorization: `Bearer ${token}` } : null),
       ...(cookie ? { cookie } : null)
@@ -63,7 +62,7 @@ export async function fetchUser(token = "", cookie = "") {
   if (!token) {
     return null;
   }
-  const res = await getUserData(token, cookie);
+  const res = await requestMe(token, cookie);
   if (!res.ok) {
     if (typeof window !== "undefined") {
       delete window.__user;
