@@ -2,14 +2,14 @@ version: "3"
 
 services:
   strapi_b_web:
-    image: next_base
+    image: registry.cn-zhangjiakou.aliyuncs.com/rv/strapi_matrix:blog-web
     # image: registry-vpc.cn-zhangjiakou.aliyuncs.com/rv/strapi_matrix:blog-web
     volumes:
-      - .:/opt/app
-      - /opt/app/node_modules
+      - .:/wrap/app
     labels:
-      - "traefik.http.routers.strapi_b_web.rule=Host(`strapi.songlairui.cn`) && ( Path(`/`) || PathPrefix(`/auth/login`) || (Path(`/connect/{provider:[a-z]+}`) && Query(`code=`)))"
-      - "traefik.http.routers.strapi_b_web.tls.certResolver=sample"
+      - "traefik.http.routers.strapi_b_web.rule=Host(`localhost`)"
+    command: /bin/sh -c "while sleep 1000; do :; done"
+
 networks:
   default:
     external:

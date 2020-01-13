@@ -2,16 +2,18 @@
 
 FROM node:alpine
 
-RUN mkdir -p /opt/app
+RUN mkdir -p /wrap/app
 RUN apk add --no-cache libc6-compat
 
-WORKDIR /opt/app
+WORKDIR /wrap
 COPY package.json yarn.lock ./
 
 RUN yarn
+
+WORKDIR /wrap/app
 
 ENV NODE_ENV production
 ENV PORT 3000
 EXPOSE 3000
 
-CMD [ "yarn", "start" ]
+CMD [ "../node_modules/.bin/next", "start" ]
