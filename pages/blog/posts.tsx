@@ -1,28 +1,16 @@
 import React, { useState } from "react";
 import useSWR from "swr";
 import { NextPage } from "next";
-import Markdown from "react-markdown";
 
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 
-import {
-  Typography,
-  Divider,
-  IconButton,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  ExpansionPanelActions,
-  Button
-} from "@material-ui/core";
-
-import DeleteIcon from "@material-ui/icons/Delete";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { Typography, Button, Grid } from "@material-ui/core";
 
 import Link from "../../src/Link";
 
 import { fetcher } from "../../utils/sample-api";
 import Layout from "../../components/Layout";
+import { PostItem } from "../../src/Post/Item";
 
 const fetcherWithSort = (url: string, sort: string) => {
   console.info("fetcher wrap", url, sort);
@@ -32,17 +20,16 @@ const fetcherWithSort = (url: string, sort: string) => {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: "100%",
-      backgroundColor: theme.palette.background.paper
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "space-around",
+      overflow: "hidden",
+      backgroundColor: theme.palette.background.paper,
+      padding: 6
     },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      flexBasis: "33.33%",
-      flexShrink: 0
-    },
-    secondaryHeading: {
-      fontSize: theme.typography.pxToRem(15),
-      color: theme.palette.text.secondary
+    gridList: {
+      // width: 500,
+      // height: 450
     }
   })
 );
@@ -82,36 +69,18 @@ const AllPosts: NextPage = function() {
         {sort}
       </Button>
       {error ? <div>failed to load</div> : null}
-      {!data ? <div>loading...</div> : null}
       <div className={classes.root}>
-        {data &&
-          data.map(item => (
-            <ExpansionPanel key={item.id} defaultExpanded={true}>
-              <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                id={`${item.id}`}
-              >
-                <Typography className={classes.heading}>
-                  {item.title}
-                </Typography>
-                <Typography className={classes.secondaryHeading}>
-                  {item.abstract}
-                </Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <div>
-                  <Markdown source={item.content || ""} />
-                </div>
-              </ExpansionPanelDetails>
-              <Divider />
-              <ExpansionPanelActions>
-                <Button size="small">[{item.id}]</Button>
-                <IconButton edge="end" aria-label="delete">
-                  <DeleteIcon />
-                </IconButton>
-              </ExpansionPanelActions>
-            </ExpansionPanel>
-          ))}
+        {!data ? (
+          <div>loading...</div>
+        ) : (
+          <Grid container className={classes.gridList} spacing={1}>
+            {data.map(item => (
+              <Grid item key={item.id} xs={6} sm={4}>
+                <PostItem data={item} />
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </div>
     </Layout>
   );
