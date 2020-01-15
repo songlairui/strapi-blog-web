@@ -2,10 +2,12 @@ import React, { useContext, FunctionComponent } from "react";
 import Head from "next/head";
 import { Container, Button, Box } from "@material-ui/core";
 
+import GithubIcon from "@material-ui/icons/GitHub";
+
 import { UserContext } from "../lib/user.context";
-import ProTip from "../src/ProTip";
-import Link from "../src/Link";
-import Copyright from "../src/Copyright";
+import ProTip from "./ProTip";
+import Link from "./Link";
+import Copyright from "./Copyright";
 
 type Props = {
   title?: string;
@@ -28,7 +30,10 @@ const Layout: FunctionComponent<Props> = function({
 
       <header>
         <nav>
-          <Link href="/">Home</Link> |{" "}
+          <Link href="https://github.com/songlairui/strapi-blog-web">
+            <GithubIcon />
+          </Link>{" "}
+          | <Link href="/">Home</Link> |{" "}
           {user.username && user.username !== "_" ? (
             <>
               [{user.username}]<Button onClick={logout}>Logout</Button>

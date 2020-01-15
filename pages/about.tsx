@@ -2,7 +2,7 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Link from "../src/Link";
 
-import Layout from "../components/Layout";
+import Layout from "../src/Layout";
 import { withAuth } from "../lib/withAuth";
 
 const About = function() {

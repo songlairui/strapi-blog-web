@@ -9,7 +9,7 @@ import { Typography, Button, Grid } from "@material-ui/core";
 import Link from "../../src/Link";
 
 import { fetcher } from "../../utils/sample-api";
-import Layout from "../../components/Layout";
+import Layout from "../../src/Layout";
 import { PostItem } from "../../src/Post/Item";
 
 const fetcherWithSort = (url: string, sort: string) => {

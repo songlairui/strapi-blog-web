@@ -28,7 +28,7 @@ import SettingsBackupRestoreIcon from "@material-ui/icons/SettingsBackupRestore"
 import Link from "../../../src/Link";
 
 import { fetcher } from "../../../utils/sample-api";
-import Layout from "../../../components/Layout";
+import Layout from "../../../src/Layout";
 
 const fetcherWithId = (url: string, id: string) => {
   return fetcher(`${url}${id}`);

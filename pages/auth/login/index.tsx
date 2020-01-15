@@ -16,7 +16,7 @@ import { HOST_URL } from "../../../utils/constants";
 import { logout } from "../../../lib/user";
 import { UserContext } from "../../../lib/user.context";
 import { withAuth } from "../../../lib/withAuth";
-import Layout from "../../../components/Layout";
+import Layout from "../../../src/Layout";
 
 const useStyles = makeStyles(theme => ({
   paper: {
